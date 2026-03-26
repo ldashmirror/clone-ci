@@ -24,12 +24,17 @@ jobs:
           for repo in $repos; do
             echo "Syncing $repo"
 
-            git clone --mirror https://github.com/$SRC_ORG/$repo.git
-            cd $repo.git
-
             gh repo create $DEST_ORG/$repo --private || true
 
-            git push --mirror https://x-access-token:$GH_TOKEN@github.com/$DEST_ORG/$repo.git
+            git init --bare $repo.git
+            cd $repo.git
+
+            for branch in main master; do
+              if git ls-remote --exit-code --heads https://github.com/$SRC_ORG/$repo.git $branch >/dev/null 2>&1; then
+                git fetch --prune https://github.com/$SRC_ORG/$repo.git refs/heads/$branch:refs/heads/$branch
+                git push --force https://x-access-token:$GH_TOKEN@github.com/$DEST_ORG/$repo.git refs/heads/$branch:refs/heads/$branch
+              fi
+            done
 
             cd ..
             rm -rf $repo.git
