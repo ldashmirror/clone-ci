@@ -21,7 +21,7 @@ jobs:
       - name: Sync repos
         run: |
           SRC_ORG="lightdash"
-          DEST_ORG="lightdash-fork"
+          DEST_ORG="ldash-mirror"
 
           repos=$(gh repo list $SRC_ORG --limit 1000 --json name -q '.[].name')
 
