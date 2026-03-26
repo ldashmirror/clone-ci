@@ -17,6 +17,7 @@ jobs:
         run: |
           SRC_ORG="lightdash"
           DEST_ORG="ldashmirror"
+          GH_TOKEN="${{ secrets.GH_TOKEN }}"
 
           repos=$(gh repo list $SRC_ORG --limit 1000 --json name -q '.[].name')
 
@@ -26,9 +27,9 @@ jobs:
             git clone --mirror https://github.com/$SRC_ORG/$repo.git
             cd $repo.git
 
-            gh repo create $DEST_ORG/$repo --private --confirm || true
+            gh repo create $DEST_ORG/$repo --private || true
 
-            git push --mirror https://$GH_TOKEN@github.com/$DEST_ORG/$repo.git
+            git push --mirror https://x-access-token:$GH_TOKEN@github.com/$DEST_ORG/$repo.git
 
             cd ..
             rm -rf $repo.git
