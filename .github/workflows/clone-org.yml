@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install GitHub CLI
-        run: |
-          sudo apt update
-          sudo apt install gh -y
-
       - name: Authenticate GH CLI
         run: echo "${{ secrets.GH_TOKEN }}" | gh auth login --with-token
 
